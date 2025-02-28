@@ -39,17 +39,29 @@ def run_dashboard():
 
 
 
-    # Churn Distribution (Count Plot)
-    st.subheader("Churn Count Plot")
-    fig, ax = plt.subplots()
-    sns.countplot(x='churn', data=data, palette="coolwarm", ax=ax)
-    st.pyplot(fig)
+    # Churn Distribution (Bar Chart)
+    st.subheader("📊 Churn Count Plot")
+    churn_counts = data['churn'].value_counts()
 
-    # Age Distribution
-    st.subheader("Age Distribution")
-    fig, ax = plt.subplots()
-    sns.histplot(data['age'], bins=30, kde=True, color='blue', ax=ax)
-    st.pyplot(fig)
+    fig_bar = px.bar(
+        x=['Stayed (Not Churned)', 'Exited (Churned)'],
+        y=churn_counts.values,
+        text=churn_counts.values,
+        labels={'x': 'Churn Status', 'y': 'Count'},
+        color=['Stayed (Not Churned)', 'Exited (Churned)'],
+        color_discrete_map={'Stayed (Not Churned)': 'green', 'Exited (Churned)': 'red'},
+        title="Churn Count Distribution"
+    )
+    st.plotly_chart(fig_bar)
+
+    # Age Distribution (Histogram)
+    st.subheader("📊 Age Distribution")
+    fig_age = px.histogram(
+        data, x='age', nbins=30, color_discrete_sequence=['blue'],
+        title="Age Distribution of Customers",
+        marginal="box"  # Adds a small box plot for additional insights
+    )
+    st.plotly_chart(fig_age)
 
 
     # Interactive Scatter Plot: Balance vs. Estimated Salary
